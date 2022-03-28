@@ -2,25 +2,31 @@
 
 const scorePlayer1 = document.getElementById('score--0');
 const scorePlayer2 = document.getElementById('score--1');
+const current0El = document.getElementById('current--0');
+const current1El = document.getElementById('current--1');
 const player1El = document.querySelector('.player--0');
 const player2El = document.querySelector('.player--1');
-
 const diceElement = document.querySelector('.dice');
-
 const btnNew = document.querySelector('.btn--new');
 const btnRoll = document.querySelector('.btn--roll');
 const btnHold = document.querySelector('.btn--hold');
 
-// Initialize Display
-scorePlayer1.textContent = 0;
-scorePlayer2.textContent = 0;
-diceElement.classList.add('hidden');
+let score, currentScore, activePlayer, playing;
 
-// App State
-const score = [0, 0];
-let currentScore = 0;
-let activePlayer = 0;
-let palying = true;
+const init = (function () {
+  score = [0, 0];
+  currentScore = 0;
+  activePlayer = 0;
+  palying = true;
+
+  scorePlayer1.textContent = 0;
+  scorePlayer2.textContent = 0;
+  diceElement.classList.add('hidden');
+  current0El.textContent = 0;
+  current1El.textContent = 0;
+  player1El.textContent = 0;
+  player2El.textContent = 0;
+})();
 
 const updateCurrent = function () {
   document.getElementById(`current--${activePlayer}`).textContent =
@@ -60,7 +66,10 @@ btnHold.addEventListener('click', function () {
   document.getElementById(`score--${activePlayer}`).textContent =
     score[activePlayer];
 
-  if (score[activePlayer] < 20) return switchPlayer();
+  if (score[activePlayer] < 20) {
+    switchPlayer();
+    return -1;
+  }
 
   palying = false;
 
@@ -72,21 +81,4 @@ btnHold.addEventListener('click', function () {
   diceElement.classList.add('hidden');
 });
 
-btnNew.addEventListener('click', function () {
-  document
-    .querySelector(`.player--${activePlayer}`)
-    .classList.remove('player--winner');
-
-  document.querySelector('.player--0').classList.add('player--active');
-
-  score[0] = 0;
-  score[1] = 0;
-  currentScore = 0;
-  updateCurrent();
-  activePlayer = 0;
-  palying = true;
-
-  scorePlayer1.textContent = 0;
-  scorePlayer2.textContent = 0;
-  diceElement.classList.add('hidden');
-});
+btnNew.addEventListener('click', init);
